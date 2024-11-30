@@ -76,11 +76,21 @@
             background-color: #ffffff;
         }
 
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .row .button {
+            flex: 1;
+            margin: 5px;
+        }
+
         #checkbox-container {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            margin: 20px 0;
+            margin-top: 20px;
         }
 
         #checkbox-container label {
@@ -99,29 +109,24 @@
         }
     </style>
     <script>
+        let currentLatitude = "-";
+        let currentLongitude = "-";
+
         function trackLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
-                        const latitude = position.coords.latitude;
-                        const longitude = position.coords.longitude;
+                        currentLatitude = position.coords.latitude;
+                        currentLongitude = position.coords.longitude;
 
                         document.getElementById("coordinates").innerText =
-                            `Latitude: ${latitude}, Longitude: ${longitude}`;
-
-                        getAddressFromCoordinates(latitude, longitude);
+                            `Latitude: ${currentLatitude}, Longitude: ${currentLongitude}`;
+                        getAddressFromCoordinates(currentLatitude, currentLongitude);
                     },
                     (error) => {
                         console.error("Erro ao obter localização:", error);
-                        let message = "Erro ao obter localização.";
-                        if (error.code === 1) {
-                            message = "Permissão de localização negada.";
-                        } else if (error.code === 2) {
-                            message = "Não foi possível determinar a localização.";
-                        } else if (error.code === 3) {
-                            message = "Tempo de espera esgotado ao tentar obter localização.";
-                        }
-                        document.getElementById("coordinates").innerText = message;
+                        document.getElementById("coordinates").innerText =
+                            "Erro ao obter localização.";
                     }
                 );
             } else {
@@ -152,6 +157,75 @@
                 });
         }
 
+        function searchByCep() {
+            const cep = document.getElementById("cepInput").value.trim();
+            if (!cep) {
+                alert("Por favor, insira um CEP válido.");
+                return;
+            }
+
+            if (!/^\d{5}-?\d{3}$/.test(cep)) {
+                alert("CEP inválido. O formato correto é 12345-678.");
+                return;
+            }
+
+            const apiUrl = `https://viacep.com.br/ws/${cep.replace("-", "")}/json/`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.erro) {
+                        document.getElementById("cepResult").innerText =
+                            "CEP não encontrado.";
+                    } else {
+                        const result = `
+                            Rua: ${data.logradouro || "N/A"},
+                            Bairro: ${data.bairro || "N/A"},
+                            Cidade: ${data.localidade || "N/A"},
+                            Estado: ${data.uf || "N/A"},
+                            CEP: ${data.cep || "N/A"},
+                            País: Brasil
+                        `;
+                        document.getElementById("cepResult").innerText = result;
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao buscar endereço pelo CEP:", error);
+                    document.getElementById("cepResult").innerText =
+                        "Erro ao buscar endereço.";
+                });
+        }
+
+        function shareLocation() {
+            const address = document.getElementById("address").innerText || "Endereço não disponível";
+            const googleMapsUrl = currentLatitude !== "-" && currentLongitude !== "-" 
+                ? `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}` 
+                : "Localização não disponível";
+
+            const message = `
+                Coordenadas:
+                Latitude: ${currentLatitude}, Longitude: ${currentLongitude}
+
+                Endereço:
+                ${address}
+
+                Link para o Google Mapas:
+                ${googleMapsUrl}
+            `;
+
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, "_blank");
+        }
+
+        function openGoogleMaps() {
+            if (currentLatitude !== "-" && currentLongitude !== "-") {
+                const googleMapsUrl = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
+                window.open(googleMapsUrl, "_blank");
+            } else {
+                alert("Localização não disponível.");
+            }
+        }
+
         window.onload = function () {
             trackLocation();
         };
@@ -163,7 +237,7 @@
     </header>
 
     <div class="container">
-        <button class="button blue" onclick="trackLocation()">Ver no Google Mapas</button>
+        <button class="button blue" onclick="openGoogleMaps()">Ver no Google Mapas</button>
 
         <div class="field">
             <p id="coordinates">Latitude: -, Longitude: -</p>
@@ -174,10 +248,16 @@
         </div>
 
         <h3>Buscar Endereço por CEP</h3>
+
         <div class="field">
             <input type="text" id="cepInput" placeholder="Digite o CEP">
-            <button class="button green" onclick="searchByCep()">Buscar</button>
         </div>
+
+        <div class="row">
+            <button class="button green" onclick="searchByCep()">Buscar CEP</button>
+            <button class="button green" onclick="shareLocation()">Compartilhar</button>
+        </div>
+
         <div class="field">
             <p id="cepResult">Resultado do CEP aparecerá aqui.</p>
         </div>
@@ -189,7 +269,8 @@
     </div>
 
     <footer>
-        <p>2024 Growcet. Todos os direitos reservados.</p>
+        <p>© 2024 Growcet. Todos os direitos reservados.</p>
     </footer>
 </body>
 </html>
+
