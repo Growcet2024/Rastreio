@@ -59,25 +59,37 @@
             margin: 10px 0;
         }
 
+        /* Caixa de entrada de texto - com contorno para o campo CEP */
         .field input[type="text"],
-        .field input[type="tel"] {
+        .field input[type="number"],
+        .field p {
             width: 100%;
             padding: 10px;
-            border: 1px solid #cccccc;
             border-radius: 5px;
             box-sizing: border-box;
             background-color: #ffffff;
         }
 
+        /* Caixas de resultado de coordenadas e endereço - com contorno */
+        .field input[type="text"],
+        .field input[type="number"] {
+            border: 1px solid #cccccc; /* Mantém o contorno no campo CEP */
+        }
+
+        /* Caixas de coordenadas, endereço e resultado do CEP com contorno */
         .field p {
-            margin: 0;
-            padding: 10px;
-            border: 1px solid #cccccc;
-            border-radius: 5px;
-            background-color: #ffffff;
-            box-sizing: border-box;
-            white-space: pre-line;
-            line-height: 1.4; /* Ajuste no espaçamento entre as linhas */
+            border: 1px solid #cccccc; /* Borda visível para resultados */
+            min-height: 50px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Manter a aparência dos títulos */
+        .title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
         }
 
         .row {
@@ -111,27 +123,6 @@
             background-color: #ffffff;
             border-top: 2px solid #e0e0e0;
         }
-
-        .coordinates {
-            margin-top: 20px;
-        }
-
-        .coordinates h3 {
-            margin-bottom: 10px;
-            font-size: 20px;
-            color: #333333;
-        }
-
-        .coordinates p {
-            margin: 0;
-            padding: 10px;
-            border: 1px solid #cccccc;
-            border-radius: 5px;
-            background-color: #ffffff;
-            box-sizing: border-box;
-            white-space: pre-line;
-            line-height: 1.4; /* Ajuste no espaçamento entre as linhas */
-        }
     </style>
     <script>
         let currentLatitude = "-";
@@ -145,7 +136,7 @@
                         currentLongitude = position.coords.longitude;
 
                         document.getElementById("coordinates").innerText =
-                            `Latitude: ${currentLatitude}, Longitude: ${currentLongitude}`;
+                            `Latitude: ${currentLatitude}\nLongitude: ${currentLongitude}`;
                         getAddressFromCoordinates(currentLatitude, currentLongitude);
                     },
                     (error) => {
@@ -165,13 +156,14 @@
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
-                    const address = `Rua: ${data.address.road || "N/A"},
-                                     Bairro: ${data.address.residential || "N/A"},
-                                     Cidade: ${data.address.city || "N/A"},
-                                     Estado: ${data.address.state || "N/A"},
-                                     CEP: ${data.address.postcode || "N/A"},
-                                     País: ${data.address.country || "N/A"}`;
-
+                    const address = `
+                        Rua: ${data.address.road || "N/A"},
+                        Bairro: ${data.address.residential || "N/A"},
+                        Cidade: ${data.address.city || "N/A"},
+                        Estado: ${data.address.state || "N/A"},
+                        CEP: ${data.address.postcode || "N/A"},
+                        País: ${data.address.country || "N/A"}
+                    `;
                     document.getElementById("address").innerText = address;
                 })
                 .catch(error => {
@@ -202,13 +194,14 @@
                         document.getElementById("cepResult").innerText =
                             "CEP não encontrado.";
                     } else {
-                        const result = `Rua: ${data.logradouro || "N/A"},
-                                         Bairro: ${data.bairro || "N/A"},
-                                         Cidade: ${data.localidade || "N/A"},
-                                         Estado: ${data.uf || "N/A"},
-                                         CEP: ${data.cep || "N/A"},
-                                         País: Brasil`;
-
+                        const result = `
+                            Rua: ${data.logradouro || "N/A"},
+                            Bairro: ${data.bairro || "N/A"},
+                            Cidade: ${data.localidade || "N/A"},
+                            Estado: ${data.uf || "N/A"},
+                            CEP: ${data.cep || "N/A"},
+                            País: Brasil
+                        `;
                         document.getElementById("cepResult").innerText = result;
                     }
                 })
@@ -221,19 +214,20 @@
 
         function shareLocation() {
             const address = document.getElementById("address").innerText || "Endereço não disponível";
-            const googleMapsUrl = currentLatitude !== "-" && currentLongitude !== "-"
-                ? `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`
+            const googleMapsUrl = currentLatitude !== "-" && currentLongitude !== "-" 
+                ? `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}` 
                 : "Localização não disponível";
 
             const message = `
-                Coordenadas:
-                Latitude: ${currentLatitude}, Longitude: ${currentLongitude}
+Coordenadas:
+Latitude: ${currentLatitude}
+Longitude: ${currentLongitude}
 
-                Endereço:
-                ${address}
+Endereço:
+${address}
 
-                Link para o Google Mapas:
-                ${googleMapsUrl}
+Link para o Google Mapas:
+${googleMapsUrl}
             `;
 
             const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
@@ -262,22 +256,20 @@
     <div class="container">
         <button class="button blue" onclick="openGoogleMaps()">Ver no Google Mapas</button>
 
-        <!-- Coordenadas -->
-        <div class="coordinates">
-            <h3>Coordenadas</h3>
+        <div class="field">
+            <div class="title">Coordenadas</div>
             <p id="coordinates">Latitude: -, Longitude: -</p>
         </div>
 
-        <!-- Endereço -->
         <div class="field">
+            <div class="title">Endereço</div>
             <p id="address">Endereço: -</p>
         </div>
 
         <h3>Buscar Endereço por CEP</h3>
 
-        <!-- Caixa de CEP -->
         <div class="field">
-            <input type="tel" id="cepInput" placeholder="Digite o CEP" pattern="[0-9]{5}-[0-9]{3}" inputmode="numeric" maxlength="10">
+            <input type="number" id="cepInput" placeholder="Digite o CEP" />
         </div>
 
         <div class="row">
@@ -285,14 +277,13 @@
             <button class="button green" onclick="shareLocation()">Compartilhar</button>
         </div>
 
-        <!-- Resultado CEP -->
         <div class="field">
             <p id="cepResult">Resultado do CEP aparecerá aqui.</p>
         </div>
 
         <div id="checkbox-container">
-            <input type="checkbox" id="trackingCheckbox">
-            <label id="trackingStatus">Localização</label>
+            <input type="checkbox" id="locationCheckbox" />
+            <label for="locationCheckbox">Localização</label>
         </div>
     </div>
 
@@ -301,3 +292,5 @@
     </footer>
 </body>
 </html>
+
+   
