@@ -203,15 +203,15 @@
                 : "Localização não disponível";
 
             const message = `
-                Coordenadas:
-                Latitude: ${currentLatitude}
-                Longitude: ${currentLongitude}
+Coordenadas:
+Latitude: ${currentLatitude}
+Longitude: ${currentLongitude}
 
-                Endereço:
-                ${address}
+Endereço:
+${address}
 
-                Link para o Google Mapas:
-                ${googleMapsUrl}
+Link para o Google Mapas:
+${googleMapsUrl}
             `;
 
             const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
