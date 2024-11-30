@@ -59,7 +59,8 @@
             margin: 10px 0;
         }
 
-        .field input[type="text"] {
+        .field input[type="text"],
+        .field input[type="tel"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #cccccc;
@@ -107,6 +108,29 @@
             background-color: #ffffff;
             border-top: 2px solid #e0e0e0;
         }
+
+        .coordinates {
+            margin-top: 20px;
+        }
+
+        .coordinates h3 {
+            margin-bottom: 10px;
+            font-size: 20px;
+            color: #333333;
+        }
+
+        .coordinates p {
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            background-color: #ffffff;
+        }
+
+        .coordinates p span {
+            display: block; /* Garantir que cada parte da coordenada (latitude/longitude) fique em linha separada */
+        }
+
     </style>
     <script>
         let currentLatitude = "-";
@@ -119,8 +143,8 @@
                         currentLatitude = position.coords.latitude;
                         currentLongitude = position.coords.longitude;
 
-                        document.getElementById("coordinates").innerText =
-                            `Latitude: ${currentLatitude}, Longitude: ${currentLongitude}`;
+                        document.getElementById("coordinates").innerHTML =
+                            `<span>Latitude: ${currentLatitude}</span><span>Longitude: ${currentLongitude}</span>`;
                         getAddressFromCoordinates(currentLatitude, currentLongitude);
                     },
                     (error) => {
@@ -140,14 +164,13 @@
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
-                    const address = `
-                        Rua: ${data.address.road || "N/A"},
-                        Bairro: ${data.address.residential || "N/A"},
-                        Cidade: ${data.address.city || "N/A"},
-                        Estado: ${data.address.state || "N/A"},
-                        CEP: ${data.address.postcode || "N/A"},
-                        País: ${data.address.country || "N/A"}
-                    `;
+                    const address = `Rua: ${data.address.road || "N/A"},
+                                     Bairro: ${data.address.residential || "N/A"},
+                                     Cidade: ${data.address.city || "N/A"},
+                                     Estado: ${data.address.state || "N/A"},
+                                     CEP: ${data.address.postcode || "N/A"},
+                                     País: ${data.address.country || "N/A"}`;
+
                     document.getElementById("address").innerText = address;
                 })
                 .catch(error => {
@@ -178,14 +201,13 @@
                         document.getElementById("cepResult").innerText =
                             "CEP não encontrado.";
                     } else {
-                        const result = `
-                            Rua: ${data.logradouro || "N/A"},
-                            Bairro: ${data.bairro || "N/A"},
-                            Cidade: ${data.localidade || "N/A"},
-                            Estado: ${data.uf || "N/A"},
-                            CEP: ${data.cep || "N/A"},
-                            País: Brasil
-                        `;
+                        const result = `Rua: ${data.logradouro || "N/A"},
+                                         Bairro: ${data.bairro || "N/A"},
+                                         Cidade: ${data.localidade || "N/A"},
+                                         Estado: ${data.uf || "N/A"},
+                                         CEP: ${data.cep || "N/A"},
+                                         País: Brasil`;
+
                         document.getElementById("cepResult").innerText = result;
                     }
                 })
@@ -198,8 +220,8 @@
 
         function shareLocation() {
             const address = document.getElementById("address").innerText || "Endereço não disponível";
-            const googleMapsUrl = currentLatitude !== "-" && currentLongitude !== "-" 
-                ? `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}` 
+            const googleMapsUrl = currentLatitude !== "-" && currentLongitude !== "-"
+                ? `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`
                 : "Localização não disponível";
 
             const message = `
@@ -239,7 +261,8 @@
     <div class="container">
         <button class="button blue" onclick="openGoogleMaps()">Ver no Google Mapas</button>
 
-        <div class="field">
+        <div class="coordinates">
+            <h3>Coordenadas</h3>
             <p id="coordinates">Latitude: -, Longitude: -</p>
         </div>
 
@@ -250,7 +273,7 @@
         <h3>Buscar Endereço por CEP</h3>
 
         <div class="field">
-            <input type="text" id="cepInput" placeholder="Digite o CEP">
+            <input type="tel" id="cepInput" placeholder="Digite o CEP" pattern="[0-9]{5}-[0-9]{3}" inputmode="numeric" maxlength="10">
         </div>
 
         <div class="row">
@@ -274,4 +297,5 @@
 </body>
 </html>
 
-     
+
+        
