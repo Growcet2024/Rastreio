@@ -59,7 +59,6 @@
             margin: 10px 0;
         }
 
-        /* Caixa de entrada de texto - com contorno para o campo CEP */
         .field input[type="text"],
         .field input[type="number"],
         .field p {
@@ -70,21 +69,19 @@
             background-color: #ffffff;
         }
 
-        /* Caixas de resultado de coordenadas e endereço - com contorno */
         .field input[type="text"],
         .field input[type="number"] {
-            border: 1px solid #cccccc; /* Mantém o contorno no campo CEP */
+            border: 1px solid #cccccc;
         }
 
-        /* Caixas de coordenadas, endereço e resultado do CEP com contorno */
         .field p {
-            border: 1px solid #cccccc; /* Borda visível para resultados */
+            border: 1px solid #cccccc;
             min-height: 50px;
             font-size: 14px;
             line-height: 1.5;
+            white-space: pre-line;
         }
 
-        /* Manter a aparência dos títulos */
         .title {
             font-size: 16px;
             font-weight: bold;
@@ -156,15 +153,13 @@
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
-                    const address = `
-                        Rua: ${data.address.road || "N/A"},
+                    const address = `Rua: ${data.address.road || "N/A"},
                         Bairro: ${data.address.residential || "N/A"},
                         Cidade: ${data.address.city || "N/A"},
                         Estado: ${data.address.state || "N/A"},
                         CEP: ${data.address.postcode || "N/A"},
-                        País: ${data.address.country || "N/A"}
-                    `;
-                    document.getElementById("address").innerText = address;
+                        País: ${data.address.country || "N/A"}`;
+                    document.getElementById("address").innerText = address.trim();
                 })
                 .catch(error => {
                     console.error("Erro ao obter endereço:", error);
@@ -194,14 +189,12 @@
                         document.getElementById("cepResult").innerText =
                             "CEP não encontrado.";
                     } else {
-                        const result = `
-                            Rua: ${data.logradouro || "N/A"},
+                        const result = `Rua: ${data.logradouro || "N/A"},
                             Bairro: ${data.bairro || "N/A"},
                             Cidade: ${data.localidade || "N/A"},
                             Estado: ${data.uf || "N/A"},
                             CEP: ${data.cep || "N/A"},
-                            País: Brasil
-                        `;
+                            País: Brasil`;
                         document.getElementById("cepResult").innerText = result;
                     }
                 })
@@ -218,17 +211,25 @@
                 ? `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}` 
                 : "Localização não disponível";
 
-            const message = `
-Coordenadas:
+            const dateTime = new Date().toLocaleString(); // Obtém a data e hora atual
+
+            const message = `*Coordenadas:*
 Latitude: ${currentLatitude}
 Longitude: ${currentLongitude}
 
-Endereço:
-${address}
+*Endereço:*
+Rua: ${address.split("\n")[0] || "N/A"}
+Bairro: ${address.split("\n")[1] || "N/A"}
+Cidade: ${address.split("\n")[2] || "N/A"}
+Estado: ${address.split("\n")[3] || "N/A"}
+CEP: ${address.split("\n")[4] || "N/A"}
+País: ${address.split("\n")[5] || "N/A"}
 
-Link para o Google Mapas:
+*Link Google Mapas:*
 ${googleMapsUrl}
-            `;
+
+*Data/Hora:*
+${dateTime}`;
 
             const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, "_blank");
@@ -292,5 +293,3 @@ ${googleMapsUrl}
     </footer>
 </body>
 </html>
-
-   
