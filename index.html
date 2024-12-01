@@ -213,17 +213,20 @@
 
             const dateTime = new Date().toLocaleString(); // Obtém a data e hora atual
 
+            // Corrigindo o acesso às partes do endereço
+            const addressParts = address.split("\n").map(part => part.split(":")[1]?.trim() || "N/A");
+
             const message = `*Coordenadas:*
 Latitude: ${currentLatitude}
 Longitude: ${currentLongitude}
 
 *Endereço:*
-Rua: ${address.split("\n")[0] || "N/A"}
-Bairro: ${address.split("\n")[1] || "N/A"}
-Cidade: ${address.split("\n")[2] || "N/A"}
-Estado: ${address.split("\n")[3] || "N/A"}
-CEP: ${address.split("\n")[4] || "N/A"}
-País: ${address.split("\n")[5] || "N/A"}
+Rua: ${addressParts[0] || "N/A"}
+Bairro: ${addressParts[1] || "N/A"}
+Cidade: ${addressParts[2] || "N/A"}
+Estado: ${addressParts[3] || "N/A"}
+CEP: ${addressParts[4] || "N/A"}
+País: ${addressParts[5] || "N/A"}
 
 *Link Google Mapas:*
 ${googleMapsUrl}
@@ -293,3 +296,5 @@ ${dateTime}`;
     </footer>
 </body>
 </html>
+
+         
