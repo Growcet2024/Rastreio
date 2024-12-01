@@ -120,6 +120,14 @@
             background-color: #ffffff;
             border-top: 2px solid #e0e0e0;
         }
+
+        /* Estilo específico para a frase "Buscar Endereço por CEP" */
+        .small-title {
+            font-size: 14px; /* Menor que os outros títulos */
+            font-weight: normal;
+            margin-bottom: 10px;
+            color: #333;
+        }
     </style>
     <script>
         let currentLatitude = "-";
@@ -270,7 +278,7 @@ ${dateTime}`;
             <p id="address">Endereço: -</p>
         </div>
 
-        <h3>Buscar Endereço por CEP</h3>
+        <h3 class="small-title">Buscar Endereço por CEP</h3>
 
         <div class="field">
             <input type="number" id="cepInput" placeholder="Digite o CEP" />
@@ -296,5 +304,3 @@ ${dateTime}`;
     </footer>
 </body>
 </html>
-
-         
