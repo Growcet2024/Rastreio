@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitory</title> <!-- Título da página -->
+    <title>Sistema Monitory</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,8 +22,8 @@
 
         header h1 {
             margin: 0;
-            font-size: 22px; /* Tamanho do título ajustado */
-            color: #333333; /* Cor preta mantida */
+            font-size: 22px;
+            color: #333333;
         }
 
         .container {
@@ -121,12 +121,23 @@
             border-top: 2px solid #e0e0e0;
         }
 
-        /* Estilo específico para a frase "Buscar Endereço por CEP" */
         .small-title {
-            font-size: 14px; /* Menor que os outros títulos */
+            font-size: 14px;
             font-weight: normal;
             margin-bottom: 10px;
             color: #333;
+        }
+
+        /* Ajuste para os botões ficarem na mesma linha com espaçamento */
+        .button-container {
+            display: flex;
+            justify-content: space-between; /* Alinha os botões nas extremidades */
+            gap: 10px; /* Espaçamento entre os botões */
+        }
+
+        .button-container .button {
+            flex: 1;
+            width: 48%; /* Ajusta os botões para ficarem com largura proporcional */
         }
     </style>
     <script>
@@ -163,10 +174,12 @@
                 .then(data => {
                     const address = `Rua: ${data.address.road || "N/A"},
                         Bairro: ${data.address.residential || "N/A"},
+                        Região: ${data.address.suburb || ""},
                         Cidade: ${data.address.city || "N/A"},
                         Estado: ${data.address.state || "N/A"},
                         CEP: ${data.address.postcode || "N/A"},
                         País: ${data.address.country || "N/A"}`;
+
                     document.getElementById("address").innerText = address.trim();
                 })
                 .catch(error => {
@@ -203,7 +216,8 @@
                             Estado: ${data.uf || "N/A"},
                             CEP: ${data.cep || "N/A"},
                             País: Brasil`;
-                        document.getElementById("cepResult").innerText = result;
+
+                        document.getElementById("cepResult").innerText = result.trim();
                     }
                 })
                 .catch(error => {
@@ -219,9 +233,8 @@
                 ? `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}` 
                 : "Localização não disponível";
 
-            const dateTime = new Date().toLocaleString(); // Obtém a data e hora atual
+            const dateTime = new Date().toLocaleString(); 
 
-            // Corrigindo o acesso às partes do endereço
             const addressParts = address.split("\n").map(part => part.split(":")[1]?.trim() || "N/A");
 
             const message = `*Coordenadas:*
@@ -231,10 +244,10 @@ Longitude: ${currentLongitude}
 *Endereço:*
 Rua: ${addressParts[0] || "N/A"}
 Bairro: ${addressParts[1] || "N/A"}
-Cidade: ${addressParts[2] || "N/A"}
-Estado: ${addressParts[3] || "N/A"}
-CEP: ${addressParts[4] || "N/A"}
-País: ${addressParts[5] || "N/A"}
+Cidade: ${addressParts[3] || "N/A"}
+Estado: ${addressParts[4] || "N/A"}
+CEP: ${addressParts[5] || "N/A"}
+País: ${addressParts[6] || "N/A"}
 
 *Link Google Mapas:*
 ${googleMapsUrl}
@@ -262,7 +275,7 @@ ${dateTime}`;
 </head>
 <body>
     <header>
-        <h1>Monitory</h1> <!-- Título alterado e ajustado -->
+        <h1>Monitory</h1>
     </header>
 
     <div class="container">
@@ -284,7 +297,8 @@ ${dateTime}`;
             <input type="number" id="cepInput" placeholder="Digite o CEP" />
         </div>
 
-        <div class="row">
+        <!-- Botões na mesma linha -->
+        <div class="button-container">
             <button class="button green" onclick="searchByCep()">Buscar CEP</button>
             <button class="button green" onclick="shareLocation()">Compartilhar</button>
         </div>
@@ -298,6 +312,7 @@ ${dateTime}`;
             <input type="checkbox" id="locationCheckbox" />
             <label for="locationCheckbox">Localização</label>
         </div>
+
     </div>
 
     <footer>
