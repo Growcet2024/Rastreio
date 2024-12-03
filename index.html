@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Monitory</title>
+    <title>Monitory</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,7 +16,7 @@
             text-align: center;
             background-color: #ffffff;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 0; /* Garantir que não tenha espaço inferior */
             border-bottom: 2px solid #e0e0e0;
         }
 
@@ -24,6 +24,15 @@
             margin: 0;
             font-size: 22px;
             color: #333333;
+        }
+
+        /* Estilo para a linha azul */
+        hr.separator {
+            margin: 0; /* Retirando a margem para ficar colada no header */
+            border: 0;
+            border-top: 3px solid #007bff;
+            margin-top: 0; /* Remover margem superior */
+            margin-bottom: 20px; /* Adicionando um pequeno espaçamento abaixo da linha */
         }
 
         .container {
@@ -174,7 +183,7 @@
                 .then(data => {
                     const address = `Rua: ${data.address.road || "N/A"},
                         Bairro: ${data.address.residential || "N/A"},
-                        Região: ${data.address.suburb || ""},
+                        Região: ${data.address.suburb || "N/A"},
                         Cidade: ${data.address.city || "N/A"},
                         Estado: ${data.address.state || "N/A"},
                         CEP: ${data.address.postcode || "N/A"},
@@ -235,8 +244,10 @@
 
             const dateTime = new Date().toLocaleString(); 
 
+            // Separando os dados do endereço
             const addressParts = address.split("\n").map(part => part.split(":")[1]?.trim() || "N/A");
 
+            // Criando a mensagem para o WhatsApp, incluindo a Região
             const message = `*Coordenadas:*
 Latitude: ${currentLatitude}
 Longitude: ${currentLongitude}
@@ -244,6 +255,7 @@ Longitude: ${currentLongitude}
 *Endereço:*
 Rua: ${addressParts[0] || "N/A"}
 Bairro: ${addressParts[1] || "N/A"}
+Região: ${addressParts[2] || "N/A"} 
 Cidade: ${addressParts[3] || "N/A"}
 Estado: ${addressParts[4] || "N/A"}
 CEP: ${addressParts[5] || "N/A"}
@@ -277,6 +289,9 @@ ${dateTime}`;
     <header>
         <h1>Monitory</h1>
     </header>
+
+    <!-- Linha azul ajustada -->
+    <hr class="separator">
 
     <div class="container">
         <button class="button blue" onclick="openGoogleMaps()">Ver no Google Mapas</button>
