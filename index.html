@@ -22,11 +22,11 @@
 
         header h1 {
             margin: 0;
-            font-size: 22px;
-            color: #333333;
+            font-size: 35px;
+            color: #5e88a6;
         }
 
-        /* Estilo para a linha azul */
+        /* Estilo para a linha azul no topo */
         hr.separator {
             margin: 0; /* Retirando a margem para ficar colada no header */
             border: 0;
@@ -128,6 +128,7 @@
             font-size: 14px;
             background-color: #ffffff;
             border-top: 2px solid #fafafa;
+            position: relative; /* Garantir que a linha azul seja posicionada corretamente */
         }
 
         .small-title {
@@ -147,6 +148,17 @@
         .button-container .button {
             flex: 1;
             width: 48%; /* Ajusta os botões para ficarem com largura proporcional */
+        }
+
+        /* Barra azul no rodapé, posicionada no topo do footer */
+        .blue-bar-footer {
+            position: absolute;
+            top: 0; /* Coloca a linha no topo do rodapé */
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #e0e0e0;
+            z-index: 1;
         }
     </style>
     <script>
@@ -255,7 +267,7 @@ Longitude: ${currentLongitude}
 *Endereço:*
 Rua: ${addressParts[0] || "N/A"}
 Bairro: ${addressParts[1] || "N/A"}
-Região: ${addressParts[2] || "N/A"} 
+Região: ${addressParts[2] || "N/A"}
 Cidade: ${addressParts[3] || "N/A"}
 Estado: ${addressParts[4] || "N/A"}
 CEP: ${addressParts[5] || "N/A"}
@@ -332,6 +344,9 @@ ${dateTime}`;
 
     <footer>
         <p>© 2024 Growcet. Todos os direitos reservados.</p>
+        <!-- Barra azul no rodapé posicionada na parte superior -->
+        <div class="blue-bar-footer"></div>
     </footer>
+
 </body>
 </html>
