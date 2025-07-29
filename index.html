@@ -1,352 +1,206 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitory</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f7f8;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>App com Bloqueio</title>
 
-        header {
-            text-align: center;
-            background-color: #ffffff;
-            padding: 20px;
-            margin-bottom: 0; /* Garantir que não tenha espaço inferior */
-            border-bottom: 2px solid #e0e0e0;
-        }
+  <!-- 🎨 Estilo geral + bloqueio -->
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #02779e;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      text-align: center;
+    }
 
-        header h1 {
-            margin: 0;
-            font-size: 35px;
-            color: #5e88a6;
-        }
+    .conteudo {
+      color: #ffffff;
+      text-shadow: 1px 1px 4px #000000;
+      max-width: 600px;
+      margin: auto;
+    }
 
-        /* Estilo para a linha azul no topo */
-        hr.separator {
-            margin: 0; /* Retirando a margem para ficar colada no header */
-            border: 0;
-            border-top: 3px solid #ffffff;
-            margin-top: 0; /* Remover margem superior */
-            margin-bottom: 20px; /* Adicionando um pequeno espaçamento abaixo da linha */
-        }
+    .titulo-app {
+      font-size: 42px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+    h2 {
+      font-size: 25px;
+      font-weight: bold;
+      color: #ffffff;
+    }
 
-        .button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+    p {
+      font-size: 18px;
+      line-height: 1.4;
+      color: #ddd;
+    }
 
-        .button.blue {
-            background-color: #5e88a6;
-            color: white;
-        }
+    .frase-inferior {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      z-index: 1;
+    }
 
-        .button.green {
-            background-color: #5e88a6;
-            color: white;
-        }
+    /* 🔒 Estilo da tela de bloqueio */
+    #trial-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
 
-        .field {
-            margin: 10px 0;
-        }
+    .overlay-box {
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
+      width: 320px;
+      text-align: center;
+    }
 
-        .field input[type="text"],
-        .field input[type="number"],
-        .field p {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            box-sizing: border-box;
-            background-color: #ffffff;
-        }
+    .overlay-box input,
+    .overlay-box button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
 
-        .field input[type="text"],
-        .field input[type="number"] {
-            border: 1px solid #5e88a6;
-        }
-
-        .field p {
-            border: 1px solid #5e88a6;
-            min-height: 50px;
-            font-size: 14px;
-            line-height: 1.5;
-            white-space: pre-line;
-        }
-
-        .title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .row .button {
-            flex: 1;
-            margin: 5px;
-        }
-
-        #checkbox-container {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        #checkbox-container label {
-            margin-left: 10px;
-            font-size: 16px;
-            color: #333333;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 20px;
-            font-size: 14px;
-            background-color: #ffffff;
-            border-top: 2px solid #fafafa;
-            position: relative; /* Garantir que a linha azul seja posicionada corretamente */
-        }
-
-        .small-title {
-            font-size: 14px;
-            font-weight: normal;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        /* Ajuste para os botões ficarem na mesma linha com espaçamento */
-        .button-container {
-            display: flex;
-            justify-content: space-between; /* Alinha os botões nas extremidades */
-            gap: 10px; /* Espaçamento entre os botões */
-        }
-
-        .button-container .button {
-            flex: 1;
-            width: 48%; /* Ajusta os botões para ficarem com largura proporcional */
-        }
-
-        /* Barra azul no rodapé, posicionada no topo do footer */
-        .blue-bar-footer {
-            position: absolute;
-            top: 0; /* Coloca a linha no topo do rodapé */
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: #e0e0e0;
-            z-index: 1;
-        }
-    </style>
-    <script>
-        let currentLatitude = "-";
-        let currentLongitude = "-";
-
-        function trackLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        currentLatitude = position.coords.latitude;
-                        currentLongitude = position.coords.longitude;
-
-                        document.getElementById("coordinates").innerText =
-                            `Latitude: ${currentLatitude}\nLongitude: ${currentLongitude}`;
-                        getAddressFromCoordinates(currentLatitude, currentLongitude);
-                    },
-                    (error) => {
-                        console.error("Erro ao obter localização:", error);
-                        document.getElementById("coordinates").innerText =
-                            "Erro ao obter localização.";
-                    }
-                );
-            } else {
-                alert("Geolocalização não é suportada neste navegador.");
-            }
-        }
-
-        function getAddressFromCoordinates(latitude, longitude) {
-            const apiUrl = `https://us1.locationiq.com/v1/reverse?key=pk.73c7ec951f7e0c38e842f740a1a63917&lat=${latitude}&lon=${longitude}&format=json`;
-
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    const address = `Rua: ${data.address.road || "N/A"},
-                        Bairro: ${data.address.residential || "N/A"},
-                        Região: ${data.address.suburb || "N/A"},
-                        Cidade: ${data.address.city || "N/A"},
-                        Estado: ${data.address.state || "N/A"},
-                        CEP: ${data.address.postcode || "N/A"},
-                        País: ${data.address.country || "N/A"}`;
-
-                    document.getElementById("address").innerText = address.trim();
-                })
-                .catch(error => {
-                    console.error("Erro ao obter endereço:", error);
-                    document.getElementById("address").innerText =
-                        "Erro ao obter endereço.";
-                });
-        }
-
-        function searchByCep() {
-            const cep = document.getElementById("cepInput").value.trim();
-            if (!cep) {
-                alert("Por favor, insira um CEP válido.");
-                return;
-            }
-
-            if (!/^\d{5}-?\d{3}$/.test(cep)) {
-                alert("CEP inválido. O formato correto é 12345-678.");
-                return;
-            }
-
-            const apiUrl = `https://viacep.com.br/ws/${cep.replace("-", "")}/json/`;
-
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.erro) {
-                        document.getElementById("cepResult").innerText =
-                            "CEP não encontrado.";
-                    } else {
-                        const result = `Rua: ${data.logradouro || "N/A"},
-                            Bairro: ${data.bairro || "N/A"},
-                            Cidade: ${data.localidade || "N/A"},
-                            Estado: ${data.uf || "N/A"},
-                            CEP: ${data.cep || "N/A"},
-                            País: Brasil`;
-
-                        document.getElementById("cepResult").innerText = result.trim();
-                    }
-                })
-                .catch(error => {
-                    console.error("Erro ao buscar endereço pelo CEP:", error);
-                    document.getElementById("cepResult").innerText =
-                        "Erro ao buscar endereço.";
-                });
-        }
-
-        function shareLocation() {
-            const address = document.getElementById("address").innerText || "Endereço não disponível";
-            const googleMapsUrl = currentLatitude !== "-" && currentLongitude !== "-" 
-                ? `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}` 
-                : "Localização não disponível";
-
-            const dateTime = new Date().toLocaleString(); 
-
-            // Separando os dados do endereço
-            const addressParts = address.split("\n").map(part => part.split(":")[1]?.trim() || "N/A");
-
-            // Criando a mensagem para o WhatsApp, incluindo a Região
-            const message = `*Coordenadas:*
-Latitude: ${currentLatitude}
-Longitude: ${currentLongitude}
-
-*Endereço:*
-Rua: ${addressParts[0] || "N/A"}
-Bairro: ${addressParts[1] || "N/A"}
-Região: ${addressParts[2] || "N/A"}
-Cidade: ${addressParts[3] || "N/A"}
-Estado: ${addressParts[4] || "N/A"}
-CEP: ${addressParts[5] || "N/A"}
-País: ${addressParts[6] || "N/A"}
-
-*Link Google Mapas:*
-${googleMapsUrl}
-
-*Data/Hora:*
-${dateTime}`;
-
-            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, "_blank");
-        }
-
-        function openGoogleMaps() {
-            if (currentLatitude !== "-" && currentLongitude !== "-") {
-                const googleMapsUrl = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
-                window.open(googleMapsUrl, "_blank");
-            } else {
-                alert("Localização não disponível.");
-            }
-        }
-
-        window.onload = function () {
-            trackLocation();
-        };
-    </script>
+    .overlay-box button {
+      background: #02779e;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Monitory</h1>
-    </header>
 
-    <!-- Linha azul ajustada -->
-    <hr class="separator">
+  <!-- 🔒 BLOQUEIO: Tela de código -->
+  <div id="trial-overlay">
+    <div class="overlay-box">
+      <p>Seu período de teste expirou.</p>
+      <input type="text" id="codigo-input" placeholder="Digite seu código" />
+      <button onclick="validarCodigo()">Desbloquear</button>
+      <a href="https://SEULINKDAHOTMART" target="_blank" style="color:#00bfff; text-decoration: underline; display:block; margin-top: 10px;">Comprar código no Hotmart</a>
+    </div>
+  </div>
 
-    <div class="container">
-        <button class="button blue" onclick="openGoogleMaps()">Ver no Google Mapas</button>
+  <!-- 📌 FRASE FIXA NO RODAPÉ -->
+  <p id="dias-restantes" class="frase-inferior"></p>
 
-        <div class="field">
-            <div class="title">Coordenadas</div>
-            <p id="coordinates">Latitude: -, Longitude: -</p>
-        </div>
 
-        <div class="field">
-            <div class="title">Endereço</div>
-            <p id="address">Endereço: -</p>
-        </div>
+  <!-- 🔒 INÍCIO DO CONTEÚDO PROTEGIDO -->
+  <div id="app-content">
 
-        <h3 class="small-title">Buscar Endereço por CEP</h3>
+    <!-- ========================== -->
+    <!-- 👇 Conteúdo do seu app começa AQUI -->
+    <!-- ========================== -->
 
-        <div class="field">
-            <input type="number" id="cepInput" placeholder="Digite o CEP" />
-        </div>
-
-        <!-- Botões na mesma linha -->
-        <div class="button-container">
-            <button class="button green" onclick="searchByCep()">Buscar CEP</button>
-            <button class="button green" onclick="shareLocation()">Compartilhar</button>
-        </div>
-
-        <div class="field">
-            <p id="cepResult">Resultado do CEP aparecerá aqui.</p>
-        </div>
-
-        <!-- Checkbox com a palavra 'Localização' -->
-        <div id="checkbox-container">
-            <input type="checkbox" id="locationCheckbox" />
-            <label for="locationCheckbox">Localização</label>
-        </div>
-
+    <div class="conteudo">
+      <div class="titulo-app">Meu App Incrível</div>
+      <h2>Bem-vindo ao app protegido!</h2>
+      <p>Este é um exemplo simples do conteúdo do seu app.</p>
+      <p>Aqui você pode colocar tudo o que quiser: textos, imagens, vídeos, scripts, componentes React, Vue, Angular, ou qualquer coisa.</p>
+      <p>Quando o período de teste expirar, aparecerá a tela de bloqueio e o conteúdo ficará oculto até desbloquear.</p>
     </div>
 
-    <footer>
-        <p>© 2024 Growcet. Todos os direitos reservados.</p>
-        <!-- Barra azul no rodapé posicionada na parte superior -->
-        <div class="blue-bar-footer"></div>
-    </footer>
+    <!-- ========================== -->
+    <!-- 👆 Conteúdo do app termina AQUI -->
+    <!-- ========================== -->
 
+  </div>
+  <!-- 🔒 FIM DO CONTEÚDO PROTEGIDO -->
+
+  <!-- 🔒 SCRIPT DE BLOQUEIO -->
+  <script>
+    (function () {
+      const diasTeste = 1; // Dias de teste
+      const codigoValido = 'SEUCODIGO123'; // Código de desbloqueio
+
+      function getDataInstalacao() {
+        let data = localStorage.getItem('dataInstalacao');
+        if (!data) {
+          data = new Date().toISOString();
+          localStorage.setItem('dataInstalacao', data);
+        }
+        return new Date(data);
+      }
+
+      function isValido() {
+        const dataInstalacao = getDataInstalacao();
+        const hoje = new Date();
+        const diffDias = Math.floor((hoje - dataInstalacao) / (1000 * 60 * 60 * 24));
+        const codigo = localStorage.getItem('codigoDesbloqueio') || '';
+        return diffDias < diasTeste || codigo.toUpperCase() === codigoValido;
+      }
+
+      function atualizarFrase() {
+        const dataInstalacao = getDataInstalacao();
+        const hoje = new Date();
+        const diffDias = Math.floor((hoje - dataInstalacao) / (1000 * 60 * 60 * 24));
+        const diasRestantes = diasTeste - diffDias;
+        const fraseEl = document.getElementById('dias-restantes');
+        if (diasRestantes > 0) {
+          fraseEl.textContent = `Faltam ${diasRestantes} dia${diasRestantes > 1 ? 's' : ''} para o fim do teste.`;
+          fraseEl.style.display = 'block';
+        } else {
+          fraseEl.style.display = 'none';
+        }
+      }
+
+      function bloquearApp() {
+        document.getElementById('app-content').style.display = 'none';
+        document.getElementById('trial-overlay').style.display = 'flex';
+        document.getElementById('dias-restantes').style.display = 'none';
+      }
+
+      window.validarCodigo = function () {
+        const codigoDigitado = document.getElementById('codigo-input').value.trim().toUpperCase();
+        if (!codigoDigitado) {
+          alert("Por favor, digite o código de desbloqueio.");
+          return;
+        }
+        if (codigoDigitado === codigoValido) {
+          localStorage.setItem('codigoDesbloqueio', codigoDigitado);
+          location.reload();
+        } else {
+          alert("Código inválido.");
+        }
+      };
+
+      // Execução principal
+      if (!isValido()) {
+        bloquearApp();
+      } else {
+        atualizarFrase();
+      }
+    })();
+  </script>
 </body>
 </html>
