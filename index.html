@@ -2,94 +2,137 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>App com Bloqueio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#02779e" />
+  <title>Vida Leve - Controle de Peso</title>
 
-  <!-- 🎨 Estilo geral + bloqueio -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon-512.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+
   <style>
     body {
       margin: 0;
       padding: 0;
       font-family: 'Inter', sans-serif;
-      background-color: #02779e;
+      background-image: url('https://i.postimg.cc/xT6r84d3/Tela-inicial-limpa.png');
+      background-size: cover;
+      background-position: center;
       height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
-      align-items: center;
-      position: relative;
+      align-items: flex-start;
       text-align: center;
     }
 
     .conteudo {
-      color: #ffffff;
-      text-shadow: 1px 1px 4px #000000;
-      max-width: 600px;
-      margin: auto;
+      color: #ef0c0c;
+      text-shadow: 1px 1px 4px #02779e;
+      max-width: 95%;
+      margin-top: 95%;
     }
 
     .titulo-app {
       font-size: 42px;
       font-weight: bold;
-      margin-bottom: 10px;
-      color: #ffffff;
+      margin-bottom: 0px;
+      color: #f0f4f8;
     }
 
     h2 {
       font-size: 25px;
       font-weight: bold;
-      color: #ffffff;
+      margin-bottom: 0px;
+      color: #f0f4f8;
     }
 
-    p {
-      font-size: 18px;
-      line-height: 1.4;
-      color: #ddd;
-    }
-
-    .frase-inferior {
-      position: fixed;
-      bottom: 20px;
-      left: 0;
-      width: 100%;
-      text-align: center;
+    .frase {
       font-size: 16px;
       font-weight: bold;
-      color: white;
-      z-index: 1;
+      margin-bottom: 60px;
+      color: #f0f4f8;
     }
 
-    /* 🔒 Estilo da tela de bloqueio */
+    .btn-acessar {
+      padding: 12px 24px;
+      background: linear-gradient(to bottom, #02779e, #02779e);
+      border: 2px solid #5fa5b4;
+      color: white;
+      font-size: 18px;
+      text-decoration: none;
+      cursor: pointer;
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+
+    .btn-acessar::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 35%;
+      background: linear-gradient(to bottom, #FFFFFF66, #FFFFFF00);
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      pointer-events: none;
+    }
+
+    .btn-acessar:hover {
+      background: linear-gradient(to bottom, #0393bb, #0393bb);
+    }
+
+    .logo-abaixo {
+      margin-top: 30px;
+      width: 90px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .frase-abaixo-bloco {
+      font-size: 15px;
+      font-weight: normal;
+      margin-top: 10px;
+      color: #f0f4f8;
+      line-height: 1.6;
+    }
+
+    /* 🧩 1 - BLOQUEIO: INÍCIO - CSS */
     #trial-overlay {
       display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
+      background: #000000cc;
       color: white;
       z-index: 9999;
       justify-content: center;
       align-items: center;
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', sans-serif, Arial, sans-serif;
     }
 
     .overlay-box {
-      background: #222;
-      padding: 20px;
-      border-radius: 12px;
-      width: 320px;
+      background: #1a1a1a99;
+      padding: 30px;
+      border-radius: 16px;
       text-align: center;
+      width: 90%;
+      max-width: 360px;
     }
 
     .overlay-box input,
     .overlay-box button {
       width: 100%;
       padding: 12px;
-      margin-top: 10px;
+      border-radius: 8px;
       border: none;
-      border-radius: 6px;
       font-size: 16px;
       box-sizing: border-box;
+      margin-bottom: 12px;
     }
 
     .overlay-box button {
@@ -97,96 +140,107 @@
       color: white;
       cursor: pointer;
     }
+
+    .overlay-box a {
+      display: block;
+      margin-top: 14px;
+      color: #00bfff;
+      text-decoration: underline;
+    }
+
+
+    /* 🧩 1 - BLOQUEIO: FIM - CSS */
   </style>
 </head>
-<body>
 
-  <!-- 🔒 BLOQUEIO: Tela de código -->
+<body>
+  <div class="conteudo">
+    <div class="titulo-app">Vida Leve</div>
+    <h2>Controle de peso</h2>
+    <p class="frase">Comece sua jornada com equilíbrio e saúde!</p>
+    <a href="principal.html" class="btn-acessar">Acessar</a>
+
+    <img src="https://i.postimg.cc/qq25bKcC/Logo-tela-512.png" alt="Logo Vida Leve" class="logo-abaixo">
+
+
+    <!-- 🗓️ 3 - BLOQUEIO: INÍCIO - FRASE DE DIAS RESTANTES -->
+    <p id="dias-restantes" style="color: white; margin-top: 15px;"></p>
+    <div class="frase-abaixo-bloco">
+      <p class="frase-abaixo"></p>
+    </div>
+    <!-- 🗓️ 3 - BLOQUEIO: FIM - FRASE DE DIAS RESTANTES -->
+  </div>
+
+  <!-- 🔓 2 - BLOQUEIO: INÍCIO - HTML DO OVERLAY -->
   <div id="trial-overlay">
     <div class="overlay-box">
-      <p>Seu período de teste expirou.</p>
+      <p style="font-size: 1.2em;">Seu período de teste expirou.</p>
       <input type="text" id="codigo-input" placeholder="Digite seu código" />
       <button onclick="validarCodigo()">Desbloquear</button>
-      <a href="https://SEULINKDAHOTMART" target="_blank" style="color:#00bfff; text-decoration: underline; display:block; margin-top: 10px;">Comprar código no Hotmart</a>
+      <a href="https://SEULINKDAHOTMART" target="_blank">Comprar código no Hotmart</a>
     </div>
   </div>
-
-  <!-- 📌 FRASE FIXA NO RODAPÉ -->
-  <p id="dias-restantes" class="frase-inferior"></p>
+  <!-- 🔓 2 - BLOQUEIO: FIM - HTML DO OVERLAY -->
 
 
-  <!-- 🔒 INÍCIO DO CONTEÚDO PROTEGIDO -->
-  <div id="app-content">
-
-    <!-- ========================== -->
-    <!-- 👇 Conteúdo do seu app começa AQUI -->
-    <!-- ========================== -->
-
-    <div class="conteudo">
-      <div class="titulo-app">Meu App Incrível</div>
-      <h2>Bem-vindo ao app protegido!</h2>
-      <p>Este é um exemplo simples do conteúdo do seu app.</p>
-      <p>Aqui você pode colocar tudo o que quiser: textos, imagens, vídeos, scripts, componentes React, Vue, Angular, ou qualquer coisa.</p>
-      <p>Quando o período de teste expirar, aparecerá a tela de bloqueio e o conteúdo ficará oculto até desbloquear.</p>
-    </div>
-
-    <!-- ========================== -->
-    <!-- 👆 Conteúdo do app termina AQUI -->
-    <!-- ========================== -->
-
-  </div>
-  <!-- 🔒 FIM DO CONTEÚDO PROTEGIDO -->
-
-  <!-- 🔒 SCRIPT DE BLOQUEIO -->
+  <!-- ⚙️ 4 - BLOQUEIO: INÍCIO - SCRIPT FINAL -->
   <script>
-    (function () {
-      const diasTeste = 3; // Dias de teste
-      const codigoValido = 'SEUCODIGO123'; // Código de desbloqueio
+    (function() {
+      const diasTeste = 3;  // duração do teste em dias
 
-      function getDataInstalacao() {
+      // Recupera ou seta a data de instalação no localStorage
+      const getDataInstalacao = () => {
         let data = localStorage.getItem('dataInstalacao');
         if (!data) {
           data = new Date().toISOString();
           localStorage.setItem('dataInstalacao', data);
         }
         return new Date(data);
-      }
+      };
 
-      function isValido() {
+      // Verifica se o app está dentro do período de teste ou desbloqueado pelo código
+      const isValido = () => {
         const dataInstalacao = getDataInstalacao();
         const hoje = new Date();
         const diffDias = Math.floor((hoje - dataInstalacao) / (1000 * 60 * 60 * 24));
-        const codigo = localStorage.getItem('codigoDesbloqueio') || '';
-        return diffDias < diasTeste || codigo.toUpperCase() === codigoValido;
-      }
+        const codigo = localStorage.getItem('codigoDesbloqueio')?.trim().toUpperCase();
+        return diffDias < diasTeste || codigo === 'SEUCODIGO123';
+      };
 
-      function atualizarFrase() {
+      // Atualiza o texto que mostra os dias restantes do teste
+      const atualizarFrase = () => {
         const dataInstalacao = getDataInstalacao();
         const hoje = new Date();
         const diffDias = Math.floor((hoje - dataInstalacao) / (1000 * 60 * 60 * 24));
         const diasRestantes = diasTeste - diffDias;
+
         const fraseEl = document.getElementById('dias-restantes');
-        if (diasRestantes > 0) {
+        if (fraseEl && diasRestantes > 0) {
           fraseEl.textContent = `Faltam ${diasRestantes} dia${diasRestantes > 1 ? 's' : ''} para o fim do teste.`;
           fraseEl.style.display = 'block';
-        } else {
+        } else if (fraseEl) {
           fraseEl.style.display = 'none';
         }
-      }
+      };
 
-      function bloquearApp() {
-        document.getElementById('app-content').style.display = 'none';
+      // Mostra o overlay de bloqueio
+      const bloquearApp = () => {
         document.getElementById('trial-overlay').style.display = 'flex';
-        document.getElementById('dias-restantes').style.display = 'none';
-      }
+      };
 
-      window.validarCodigo = function () {
+      // Esconde o overlay de bloqueio
+      const liberarApp = () => {
+        document.getElementById('trial-overlay').style.display = 'none';
+      };
+
+      // Função chamada pelo botão para validar código digitado
+      window.validarCodigo = () => {
         const codigoDigitado = document.getElementById('codigo-input').value.trim().toUpperCase();
         if (!codigoDigitado) {
           alert("Por favor, digite o código de desbloqueio.");
           return;
         }
-        if (codigoDigitado === codigoValido) {
+        if (codigoDigitado === 'SEUCODIGO123') {
           localStorage.setItem('codigoDesbloqueio', codigoDigitado);
           location.reload();
         } else {
@@ -194,13 +248,20 @@
         }
       };
 
-      // Execução principal
-      if (!isValido()) {
-        bloquearApp();
-      } else {
-        atualizarFrase();
-      }
+      // Inicialização ao carregar a página
+      window.addEventListener('DOMContentLoaded', () => {
+        if (!isValido()) {
+          bloquearApp();
+        } else {
+          liberarApp();
+          atualizarFrase();
+        }
+      });
     })();
   </script>
+  <!-- ⚙️ 4 - BLOQUEIO: FIM - SCRIPT FINAL -->
+
+
+
 </body>
 </html>
